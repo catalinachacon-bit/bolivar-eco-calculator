@@ -1,3 +1,4 @@
+```html
 <!doctype html>
 <html lang="es">
 <head>
@@ -8,6 +9,89 @@
 <body>
   <main>
     <h1>Bolívar Eco-Calculator</h1>
+
+    <form id="formulario-ambiental">
+      <p>
+        <label for="transporte">Medio de transporte al colegio</label>
+        <select id="transporte" name="transporte" required>
+          <option value="">Selecciona una opción</option>
+          <option value="bus">Bus</option>
+          <option value="privado">Carro privado</option>
+          <option value="compartido">Carro compartido</option>
+          <option value="activo">Bicicleta/Caminando</option>
+        </select>
+      </p>
+
+      <p>
+        <label for="hojas">Hojas de papel usadas al día</label>
+        <input id="hojas" name="hojas" type="number" min="0" step="1" required>
+      </p>
+
+      <p>
+        <label for="reciclaje">Nivel de reciclaje</label>
+        <select id="reciclaje" name="reciclaje" required>
+          <option value="">Selecciona una opción</option>
+          <option value="bajo">Bajo</option>
+          <option value="medio">Medio</option>
+          <option value="alto">Alto</option>
+        </select>
+      </p>
+
+      <button type="submit">Calcular</button>
+    </form>
+
+    <p id="resultado" role="status" aria-atomic="true"></p>
+    <p>La estimación usa factores ilustrativos y supone cinco días escolares por semana.</p>
   </main>
+
+  <script>
+    const diasEscolares = 5;
+    const kgPorHoja = 0.005;
+
+    // Supuestos ilustrativos en kg de CO₂ por estudiante y día.
+    // Cada valor de transporte incluye el trayecto de ida y vuelta.
+    const opcionesTransporte = {
+      bus: { kgPorDia: 0.8, puntos: 30 },
+      privado: { kgPorDia: 2, puntos: 0 },
+      compartido: { kgPorDia: 1, puntos: 20 },
+      activo: { kgPorDia: 0, puntos: 40 }
+    };
+
+    // En este modelo, el nivel de reciclaje reduce solo la huella del papel.
+    const opcionesReciclaje = {
+      bajo: { reduccionPapel: 0, puntos: 0 },
+      medio: { reduccionPapel: 0.15, puntos: 15 },
+      alto: { reduccionPapel: 0.30, puntos: 30 }
+    };
+
+    const formulario = document.getElementById("formulario-ambiental");
+    const resultado = document.getElementById("resultado");
+    const formatoHuella = new Intl.NumberFormat("es-CO", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    formulario.addEventListener("submit", (evento) => {
+      evento.preventDefault();
+
+      const transporte = opcionesTransporte[formulario.elements.transporte.value];
+      const hojasPorDia = formulario.elements.hojas.valueAsNumber;
+      const reciclaje = opcionesReciclaje[formulario.elements.reciclaje.value];
+
+      // Huella semanal = 5 × (transporte diario + huella diaria del papel ajustada).
+      const huellaPapelDiaria = hojasPorDia * kgPorHoja * (1 - reciclaje.reduccionPapel);
+      const huellaSemanal = diasEscolares * (transporte.kgPorDia + huellaPapelDiaria);
+
+      // Eco-Points = hasta 40 por transporte, 30 por papel y 30 por reciclaje.
+      // El papel empieza en 30 puntos y pierde 2 por cada hoja usada al día.
+      const puntosPapel = Math.max(0, 30 - 2 * hojasPorDia);
+      const ecoPoints = transporte.puntos + puntosPapel + reciclaje.puntos;
+
+      resultado.textContent =
+        `Huella semanal estimada: ${formatoHuella.format(huellaSemanal)} kg de CO₂. ` +
+        `Eco-Points: ${ecoPoints} de 100.`;
+    });
+  </script>
 </body>
 </html>
+```
