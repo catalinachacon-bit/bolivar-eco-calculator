@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="es">
 <head>
@@ -9,25 +10,19 @@
     :root {
       color-scheme: light;
       --texto: #12372a;
-      --texto-secundario: #426457;
-      --esmeralda: #047857;
-      --esmeralda-oscuro: #065f46;
-      --borde: #658878;
-      --foco: #075985;
+      --verde: #047857;
+      --verde-oscuro: #065f46;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
 
     body {
       min-height: 100vh;
       margin: 0;
       color: var(--texto);
-      background: radial-gradient(ellipse at top, #d1fae5, transparent 65%),
-        #f4faf6;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      line-height: 1.5;
+      background: radial-gradient(ellipse at top, #d1fae5, transparent 65%), #f4faf6;
+      font: 1rem/1.5 system-ui, sans-serif;
     }
 
     main {
@@ -36,146 +31,211 @@
       padding: clamp(2rem, 7vw, 4rem) clamp(1rem, 4vw, 2rem) 2rem;
     }
 
+    header {
+      display: grid;
+      justify-items: center;
+      gap: 1rem;
+      margin-block-end: 1.5rem;
+    }
+
     h1 {
-      margin: 0 0 clamp(1.25rem, 4vw, 2rem);
-      color: var(--esmeralda-oscuro);
+      margin: 0;
+      color: var(--verde-oscuro);
       font-size: clamp(1.8rem, 6vw, 3rem);
       line-height: 1.12;
       text-align: center;
-      text-wrap: balance;
     }
 
-    #formulario-ambiental {
-      display: grid;
-      gap: 1.25rem;
+    .idioma { display: flex; align-items: center; gap: 0.6rem; }
+
+    form, #resultado {
       padding: clamp(1.25rem, 5vw, 2rem);
       border: 1px solid #d1e8dc;
       border-radius: 1.25rem;
+    }
+
+    form {
+      display: grid;
+      gap: 1.25rem;
       background: #fff;
       box-shadow: 0 12px 32px rgb(6 95 70 / 10%);
     }
 
-    #formulario-ambiental p {
-      display: grid;
-      gap: 0.4rem;
-      min-width: 0;
-      margin: 0;
-    }
+    form > div { display: grid; gap: 0.4rem; min-width: 0; }
+    form :is(input, select, button) { width: 100%; }
+    label, dt { font-weight: 650; }
 
-    #formulario-ambiental label {
-      font-weight: 650;
-    }
-
-    #formulario-ambiental :is(select, input, button) {
-      width: 100%;
+    input, select, button {
       min-height: 2.75rem;
       padding: 0.65rem 0.85rem;
-      border: 1px solid var(--borde);
+      border: 1px solid #658878;
       border-radius: 0.65rem;
+      color: var(--texto);
+      background: #f7fcf9;
       font: inherit;
     }
 
-    #formulario-ambiental :is(select, input) {
-      color: var(--texto);
-      background: #f7fcf9;
-    }
-
-    #formulario-ambiental button {
-      border-color: var(--esmeralda);
+    button {
+      border-color: var(--verde);
       color: #fff;
-      background: var(--esmeralda);
+      background: var(--verde);
       font-weight: 700;
       cursor: pointer;
     }
 
-    #formulario-ambiental button:hover {
-      border-color: var(--esmeralda-oscuro);
-      background: var(--esmeralda-oscuro);
-    }
+    button:hover:not(:disabled) { background: var(--verde-oscuro); }
+    button:disabled { opacity: 0.65; cursor: default; }
 
-    #formulario-ambiental :is(select, input, button):focus-visible {
-      outline: 3px solid var(--foco);
+    :is(input, select, button):focus-visible {
+      outline: 3px solid #075985;
       outline-offset: 3px;
     }
 
     #resultado {
-      margin: 0;
-      overflow-wrap: anywhere;
-    }
-
-    #resultado:not(:empty) {
-      margin-block-start: 1rem;
-      padding: 1.1rem 1.25rem;
-      border: 1px solid #a7e5c7;
-      border-inline-start: 0.3rem solid var(--esmeralda);
-      border-radius: 0.85rem;
-      color: var(--esmeralda-oscuro);
+      margin-block: 1rem;
+      border-inline-start: 0.3rem solid var(--verde);
       background: #e7f8ee;
-      font-size: 1.0625rem;
-      font-weight: 700;
     }
 
-    main > p:last-child:not(#resultado) {
-      margin: 0.9rem 0 0;
-      color: var(--texto-secundario);
-      font-size: 0.875rem;
-    }
+    #resultado h2 { margin: 0 0 0.75rem; color: var(--verde-oscuro); }
+    dl { display: grid; gap: 0.75rem; margin: 0; }
+    dd { margin: 0; overflow-wrap: anywhere; }
+    .metricas dd { color: var(--verde-oscuro); font-size: 1.25rem; font-weight: 700; }
+    .nota { color: #426457; font-size: 0.875rem; }
+    .solo-impresion { display: none; }
 
     @media (min-width: 38rem) {
-      #formulario-ambiental {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      form > div:first-child, form > button { grid-column: 1 / -1; }
+      .metricas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media print {
+      @page { margin: 18mm; }
+
+      body { min-height: auto; background: #fff; color: #111; }
+      main { max-width: none; padding: 0; }
+      .solo-pantalla { display: none !important; }
+      .solo-impresion { display: block; }
+
+      #resultado {
+        margin: 0;
+        padding: 1.5rem;
+        border: 2px solid #065f46;
+        border-radius: 0.75rem;
+        background: #fff;
+        break-inside: avoid;
       }
 
-      #formulario-ambiental p:first-child,
-      #formulario-ambiental button {
-        grid-column: 1 / -1;
-      }
+      .marca { margin: 0 0 0.5rem; font-weight: 700; }
+      .datos { margin-block: 1rem; }
+      .metricas { border-top: 1px solid #658878; padding-top: 1rem; }
     }
   </style>
 </head>
 <body>
   <main>
-    <h1>Bolívar Eco-Calculator</h1>
+    <header class="solo-pantalla">
+      <h1>Bolívar Eco-Calculator</h1>
+      <div class="idioma">
+        <label for="idioma" data-texto="idioma"></label>
+        <select id="idioma">
+          <option value="es" lang="es" selected>Español</option>
+          <option value="en" lang="en">English</option>
+        </select>
+      </div>
+    </header>
 
-    <form id="formulario-ambiental">
-      <p>
-        <label for="transporte">Medio de transporte al colegio</label>
+    <form id="formulario-ambiental" class="solo-pantalla">
+      <div>
+        <label for="transporte" data-texto="transporte"></label>
         <select id="transporte" name="transporte" required>
-          <option value="">Selecciona una opción</option>
-          <option value="bus">Bus</option>
-          <option value="privado">Carro privado</option>
-          <option value="compartido">Carro compartido</option>
-          <option value="activo">Bicicleta/Caminando</option>
+          <option value="" data-texto="elegir"></option>
+          <option value="bus" data-texto="bus"></option>
+          <option value="privado" data-texto="privado"></option>
+          <option value="compartido" data-texto="compartido"></option>
+          <option value="activo" data-texto="activo"></option>
         </select>
-      </p>
+      </div>
 
-      <p>
-        <label for="hojas">Hojas de papel usadas al día</label>
+      <div>
+        <label for="hojas" data-texto="hojas"></label>
         <input id="hojas" name="hojas" type="number" min="0" step="1" required>
-      </p>
+      </div>
 
-      <p>
-        <label for="reciclaje">Nivel de reciclaje</label>
+      <div>
+        <label for="reciclaje" data-texto="reciclaje"></label>
         <select id="reciclaje" name="reciclaje" required>
-          <option value="">Selecciona una opción</option>
-          <option value="bajo">Bajo</option>
-          <option value="medio">Medio</option>
-          <option value="alto">Alto</option>
+          <option value="" data-texto="elegir"></option>
+          <option value="bajo" data-texto="bajo"></option>
+          <option value="medio" data-texto="medio"></option>
+          <option value="alto" data-texto="alto"></option>
         </select>
-      </p>
+      </div>
 
-      <button type="submit">Calcular</button>
+      <button type="submit" data-texto="calcular"></button>
     </form>
 
-    <p id="resultado" role="status" aria-atomic="true"></p>
-    <p>La estimación usa factores ilustrativos y supone cinco días escolares por semana.</p>
+    <div aria-live="polite">
+      <section id="resultado" hidden>
+        <p class="marca solo-impresion">Bolívar Eco-Calculator</p>
+        <h2 class="solo-pantalla" data-texto="resultados"></h2>
+        <h2 class="solo-impresion" data-texto="certificado"></h2>
+
+        <div class="solo-impresion">
+          <dl class="datos">
+            <div><dt data-texto="fecha"></dt><dd id="fecha-reporte"></dd></div>
+            <div><dt data-texto="transporte"></dt><dd id="transporte-reporte"></dd></div>
+            <div><dt data-texto="hojas"></dt><dd id="hojas-reporte"></dd></div>
+            <div><dt data-texto="reciclaje"></dt><dd id="reciclaje-reporte"></dd></div>
+          </dl>
+        </div>
+
+        <dl class="metricas">
+          <div><dt data-texto="huella"></dt><dd id="huella-reporte"></dd></div>
+          <div><dt>Eco-Points</dt><dd id="puntos-reporte"></dd></div>
+        </dl>
+
+        <p class="nota solo-impresion" data-texto="nota"></p>
+      </section>
+    </div>
+
+    <p class="nota solo-pantalla" data-texto="nota"></p>
+    <button id="imprimir" class="solo-pantalla" type="button" data-texto="imprimir" disabled></button>
   </main>
 
   <script>
+    const traducciones = {
+      es: {
+        locale: "es-CO",
+        idioma: "Idioma", elegir: "Selecciona una opción", calcular: "Calcular",
+        transporte: "Medio de transporte al colegio", hojas: "Hojas de papel usadas al día",
+        reciclaje: "Nivel de reciclaje", bus: "Bus", privado: "Carro privado",
+        compartido: "Carro compartido", activo: "Bicicleta/Caminando",
+        bajo: "Bajo", medio: "Medio", alto: "Alto", fecha: "Fecha",
+        resultados: "Resultados", certificado: "Certificado ecológico",
+        huella: "Huella semanal estimada", unidad: "kg de CO₂", de: "de",
+        imprimir: "Imprimir / Guardar Reporte PDF",
+        nota: "La estimación usa factores ilustrativos y supone cinco días escolares por semana."
+      },
+      en: {
+        locale: "en-US",
+        idioma: "Language", elegir: "Select an option", calcular: "Calculate",
+        transporte: "Transportation to school", hojas: "Sheets of paper used per day",
+        reciclaje: "Recycling level", bus: "Bus", privado: "Private car",
+        compartido: "Carpool", activo: "Cycling/Walking",
+        bajo: "Low", medio: "Medium", alto: "High", fecha: "Date",
+        resultados: "Results", certificado: "Environmental certificate",
+        huella: "Estimated weekly footprint", unidad: "kg of CO₂", de: "out of",
+        imprimir: "Print / Save Report as PDF",
+        nota: "This estimate uses illustrative factors and assumes five school days per week."
+      }
+    };
+
+    // Factores ilustrativos de transporte por estudiante y día, ida y vuelta.
     const diasEscolares = 5;
     const kgPorHoja = 0.005;
 
-    // Factores ilustrativos en kg de CO₂ por estudiante y día, con ida y vuelta.
     const opcionesTransporte = {
       bus: { kgPorDia: 0.8, puntos: 30 },
       privado: { kgPorDia: 2, puntos: 0 },
@@ -183,41 +243,88 @@
       activo: { kgPorDia: 0, puntos: 40 }
     };
 
-    // En este modelo, el nivel de reciclaje reduce solo la huella del papel.
     const opcionesReciclaje = {
       bajo: { reduccionPapel: 0, puntos: 0 },
       medio: { reduccionPapel: 0.15, puntos: 15 },
       alto: { reduccionPapel: 0.30, puntos: 30 }
     };
 
+    const idioma = document.getElementById("idioma");
     const formulario = document.getElementById("formulario-ambiental");
     const resultado = document.getElementById("resultado");
-    const formatoHuella = new Intl.NumberFormat("es-CO", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+    const botonImprimir = document.getElementById("imprimir");
+    const textos = document.querySelectorAll("[data-texto]");
+    let reporte = null;
+
+    function mostrarReporte() {
+      resultado.hidden = reporte === null;
+      botonImprimir.disabled = reporte === null;
+      if (!reporte) return;
+
+      const t = traducciones[idioma.value];
+      const decimal = new Intl.NumberFormat(t.locale, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+      document.getElementById("fecha-reporte").textContent =
+        new Intl.DateTimeFormat(t.locale, { dateStyle: "long" }).format(reporte.fecha);
+      document.getElementById("transporte-reporte").textContent = t[reporte.transporte];
+      document.getElementById("hojas-reporte").textContent =
+        new Intl.NumberFormat(t.locale).format(reporte.hojas);
+      document.getElementById("reciclaje-reporte").textContent = t[reporte.reciclaje];
+      document.getElementById("huella-reporte").textContent =
+        `${decimal.format(reporte.huella)} ${t.unidad}`;
+      document.getElementById("puntos-reporte").textContent =
+        `${reporte.puntos} ${t.de} 100`;
+    }
+
+    function cambiarIdioma() {
+      const t = traducciones[idioma.value];
+      document.documentElement.lang = idioma.value;
+
+      for (const elemento of textos) {
+        elemento.textContent = t[elemento.dataset.texto];
+      }
+
+      mostrarReporte();
+    }
 
     formulario.addEventListener("submit", (evento) => {
       evento.preventDefault();
 
-      const transporte = opcionesTransporte[formulario.elements.transporte.value];
-      const hojasPorDia = formulario.elements.hojas.valueAsNumber;
-      const reciclaje = opcionesReciclaje[formulario.elements.reciclaje.value];
+      const transporte = formulario.elements.transporte.value;
+      const hojas = formulario.elements.hojas.valueAsNumber;
+      const reciclaje = formulario.elements.reciclaje.value;
+      const viaje = opcionesTransporte[transporte];
+      const nivel = opcionesReciclaje[reciclaje];
 
-      // Huella semanal = 5 × (transporte diario + huella diaria del papel ajustada).
-      const huellaPapelDiaria = hojasPorDia * kgPorHoja * (1 - reciclaje.reduccionPapel);
-      const huellaSemanal = diasEscolares * (transporte.kgPorDia + huellaPapelDiaria);
+      // Huella semanal = cinco días de transporte y papel, con ajuste por reciclaje.
+      const huellaPapelDiaria = hojas * kgPorHoja * (1 - nivel.reduccionPapel);
+      const huella = diasEscolares * (viaje.kgPorDia + huellaPapelDiaria);
 
       // Hasta 40 puntos por transporte, 30 por papel y 30 por reciclaje.
-      // El papel empieza en 30 puntos y pierde 2 por cada hoja usada al día.
-      const puntosPapel = Math.max(0, 30 - 2 * hojasPorDia);
-      const ecoPoints = transporte.puntos + puntosPapel + reciclaje.puntos;
+      const puntosPapel = Math.max(0, 30 - 2 * hojas);
+      const puntos = viaje.puntos + puntosPapel + nivel.puntos;
 
-      resultado.textContent =
-        `Huella semanal estimada: ${formatoHuella.format(huellaSemanal)} kg de CO₂. ` +
-        `Eco-Points: ${ecoPoints} de 100.`;
+      reporte = { fecha: new Date(), transporte, hojas, reciclaje, huella, puntos };
+      mostrarReporte();
     });
+
+    // Si cambian los datos, se requiere recalcular antes de imprimir.
+    formulario.addEventListener("input", () => {
+      if (!reporte) return;
+      reporte = null;
+      mostrarReporte();
+    });
+
+    idioma.addEventListener("change", cambiarIdioma);
+
+    botonImprimir.addEventListener("click", () => {
+      if (reporte) window.print();
+    });
+
+    cambiarIdioma();
   </script>
 </body>
 </html>
-```
